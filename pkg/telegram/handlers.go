@@ -5,18 +5,10 @@ import (
 	"log"
 )
 
-const (
-	commandStart  = "start"
-	commandAddId  = "ID"
-	commandCreate = "create"
-	commandWatch  = "watch"
-	commandTotal  = "total"
-)
-
 func (b *Bot) handleCommand(message *tgbotapi.Message) error {
 	msg := tgbotapi.NewMessage(message.Chat.ID, "there is no such command here")
 	switch message.Command() {
-	case commandStart:
+	case "start":
 		b.handleCommandStart(message)
 		return nil
 	case "reset":
@@ -56,7 +48,7 @@ func (b *Bot) handleCommandBack(message *tgbotapi.Message) {
 }
 func (b *Bot) handleCommandStart(message *tgbotapi.Message) {
 	b.repos.AddUser(message.Chat.ID)
-	b.buttonsFirst(message.Chat.ID, "starting")
+	b.buttonsFirst(message.Chat.ID, "you can add a company and log in")
 }
 
 func (b *Bot) handleMessage(message *tgbotapi.Message) {
