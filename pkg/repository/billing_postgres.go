@@ -57,23 +57,23 @@ func (r *BillingPostgres) AddAmount(amount int, chatId int64) error {
 		fmt.Printf(err.Error())
 		return err
 	}
+	tx, err := r.db.Begin()
 	query = fmt.Sprintf("INSERT INTO %s (amount, company_id, time) VALUES ($1, $2, current_timestamp) RETURNING id",
 		billTable)
-	row := r.db.QueryRow(query, amount, id)
+	row := tx.QueryRow(query, amount, id)
 	err = row.Scan(&id)
 	if err != nil {
-		fmt.Printf(err.Error())
+		tx.Rollback()
 		return err
 	}
 	query = fmt.Sprintf("UPDATE %s SET current_bill_id=$1 where chat_id=$2", userTable)
-
-	_, err = r.db.Exec(query, id, chatId)
-
+	_, err = tx.Exec(query, id, chatId)
 	if err != nil {
-		fmt.Println(err.Error())
+		tx.Rollback()
 		return err
 	}
-	return nil
+	return tx.Commit()
+
 }
 
 func (r *BillingPostgres) AddDescription(desc string, chatId int64, sub string) error {
