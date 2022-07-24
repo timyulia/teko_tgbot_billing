@@ -2,7 +2,7 @@ package telegram
 
 import tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 
-func (b *Bot) buttonsSecond(chatId int64, text string) {
+func (b *Bot) buttonsSecond(chatId int64, text string) error {
 	msg := tgbotapi.NewMessage(chatId, text)
 	reply := tgbotapi.NewReplyKeyboard(
 		tgbotapi.NewKeyboardButtonRow(
@@ -13,7 +13,8 @@ func (b *Bot) buttonsSecond(chatId int64, text string) {
 	)
 	reply.OneTimeKeyboard = true
 	msg.ReplyMarkup = reply
-	b.bot.Send(msg)
+	_, err := b.bot.Send(msg)
+	return err
 }
 
 func (b *Bot) buttonsFirst(chatId int64, text string) {

@@ -31,7 +31,7 @@ func (b *Bot) handleCommand(message *tgbotapi.Message) error {
 }
 
 func (b *Bot) handleCommandBack(message *tgbotapi.Message) {
-	cond := b.repos.CheckCond(message.Chat.ID)
+	cond, _ := b.repos.CheckCond(message.Chat.ID)
 	switch cond {
 	case "adding", "logging in", "validated":
 		b.repos.UpdateCond(message.Chat.ID, "started")
@@ -51,26 +51,30 @@ func (b *Bot) handleCommandStart(message *tgbotapi.Message) {
 	b.buttonsFirst(message.Chat.ID, "you can add a company and log in")
 }
 
-func (b *Bot) handleMessage(message *tgbotapi.Message) {
+func (b *Bot) handleMessage(message *tgbotapi.Message) error {
 	log.Printf("[%s] %s", message.From.UserName, message.Text)
-	cond := b.repos.CheckCond(message.Chat.ID)
+	cond, err := b.repos.CheckCond(message.Chat.ID)
+	if err != nil {
+		return err
+	}
 	switch cond {
 	case "started":
-		b.handleStartedK(message)
+		err = b.handleStartedK(message)
 	case "adding":
-		b.handleAddIdK(message)
+		err = b.handleAddIdK(message)
 	case "logging in":
-		b.handleLogIn(message)
+		err = b.handleLogIn(message)
 	case "validated":
-		b.handleLogged(message)
+		err = b.handleLogged(message)
 	case "amount":
-		b.handleAmount(message)
+		err = b.handleAmount(message)
 	case "description":
-		b.handleDescription(message, "description")
+		err = b.handleDescription(message, "description")
 	case "email":
-		b.handleDescription(message, "email")
+		err = b.handleDescription(message, "email")
 	default:
 		msg := tgbotapi.NewMessage(message.Chat.ID, "don't understand")
 		b.bot.Send(msg)
 	}
+	return err
 }

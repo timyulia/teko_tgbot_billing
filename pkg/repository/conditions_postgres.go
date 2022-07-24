@@ -13,13 +13,12 @@ func NewConditionPostgres(db *sqlx.DB) *ConditionPostgres {
 	return &ConditionPostgres{db: db}
 }
 
-func (r *ConditionPostgres) CheckCond(id int64) string {
+func (r *ConditionPostgres) CheckCond(id int64) (string, error) {
 	query := fmt.Sprintf("SELECT condition from %s WHERE chat_id = $1 ", userTable)
 
 	var cond string
-	r.db.Get(&cond, query, id)
-	return cond
-
+	err := r.db.Get(&cond, query, id)
+	return cond, err
 }
 
 func (r *ConditionPostgres) AddUser(id int64) error {

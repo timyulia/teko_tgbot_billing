@@ -19,7 +19,7 @@ type Billing interface {
 }
 
 type Condition interface {
-	CheckCond(id int64) string
+	CheckCond(id int64) (string, error)
 	AddUser(id int64) error
 	UpdateCond(chatId int64, cond string) error
 }

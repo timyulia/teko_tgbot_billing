@@ -7,19 +7,21 @@ import (
 	"strconv"
 )
 
-func (b *Bot) handleLogged(message *tgbotapi.Message) {
+func (b *Bot) handleLogged(message *tgbotapi.Message) error {
+	var err error
 	switch message.Text {
 	case "create a bill":
-		b.repos.UpdateCond(message.Chat.ID, "amount")
+		err = b.repos.UpdateCond(message.Chat.ID, "amount")
 		msg := tgbotapi.NewMessage(message.Chat.ID, "enter the amount")
 		b.bot.Send(msg)
 	case "last 10 bills":
-		b.handleHistory(message)
+		err = b.handleHistory(message)
 	case "total amount":
-		b.handleTotal(message)
+		err = b.handleTotal(message)
 	default:
-		b.buttonsSecond(message.Chat.ID, "you can create a bill, check last 10 bills, see a total amount")
+		err = b.buttonsSecond(message.Chat.ID, "you can create a bill, check last 10 bills, see a total amount")
 	}
+	return err
 }
 
 func (b *Bot) handleAmount(message *tgbotapi.Message) error {

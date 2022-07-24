@@ -29,11 +29,14 @@ func (b *Bot) handleLogIn(message *tgbotapi.Message) error {
 	return nil
 }
 
-func (b *Bot) handleStartedK(message *tgbotapi.Message) {
+func (b *Bot) handleStartedK(message *tgbotapi.Message) error {
 
 	switch message.Text {
 	case "add":
-		b.repos.UpdateCond(message.Chat.ID, "adding")
+		err := b.repos.UpdateCond(message.Chat.ID, "adding")
+		if err != nil {
+			return err
+		}
 		msg := tgbotapi.NewMessage(message.Chat.ID, "enter the ID, it's a number")
 		b.bot.Send(msg)
 	case "log in":
@@ -44,6 +47,7 @@ func (b *Bot) handleStartedK(message *tgbotapi.Message) {
 		msg := tgbotapi.NewMessage(message.Chat.ID, "you have to add or log in")
 		b.bot.Send(msg)
 	}
+	return nil
 }
 
 func (b *Bot) handleAddIdK(message *tgbotapi.Message) error {

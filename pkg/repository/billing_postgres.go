@@ -39,9 +39,19 @@ func (r *BillingPostgres) GetHistory(chatId int64) ([]bills.Bill, error) {
 }
 
 func (r *BillingPostgres) GetTotal(chatId int64) (int, error) {
-	query := fmt.Sprintf("SELECT SUM(amount) from %s b inner join %s u  on b.company_id=u.company_id  WHERE chat_id = $1  and time>'today'", billTable, userTable)
+	query := fmt.Sprintf("SELECT COUNT(1) from %s b inner join %s u  on b.company_id=u.company_id  WHERE chat_id = $1  and time>'today'", billTable, userTable)
 	var res int
 	err := r.db.Get(&res, query, chatId)
+	if err != nil {
+		fmt.Printf(err.Error())
+		return 0, err
+	}
+	if res == 0 {
+		return 0, nil
+	}
+	query = fmt.Sprintf("SELECT SUM(amount) from %s b inner join %s u  on b.company_id=u.company_id  WHERE chat_id = $1  and time>'today'", billTable, userTable)
+
+	err = r.db.Get(&res, query, chatId)
 	if err != nil {
 		fmt.Printf(err.Error())
 		return 0, err
