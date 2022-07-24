@@ -16,8 +16,6 @@ type Billing interface {
 	GetTotal(chatId int64) (int, error)
 	AddAmount(amount int, chatId int64) error
 	AddDescription(desc string, chatId int64, sub string) error
-	//Delete(userId, listId int) error
-	//Update(userId, listId int, input todo.UpdateListInput) error
 }
 
 type Condition interface {
