@@ -42,6 +42,5 @@ func (r *CompanyPostgres) ValidateCompany(id int, chatId int64) (bool, error) {
 		}
 		return true, nil
 	}
-	//fmt.Println("<1")
 	return false, nil
 }

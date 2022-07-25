@@ -17,7 +17,7 @@ func (b *Bot) buttonsSecond(chatId int64, text string) error {
 	return err
 }
 
-func (b *Bot) buttonsFirst(chatId int64, text string) {
+func (b *Bot) buttonsFirst(chatId int64, text string) error {
 	msg := tgbotapi.NewMessage(chatId, text)
 	reply := tgbotapi.NewReplyKeyboard(
 		tgbotapi.NewKeyboardButtonRow(
@@ -27,5 +27,6 @@ func (b *Bot) buttonsFirst(chatId int64, text string) {
 	)
 	reply.OneTimeKeyboard = true
 	msg.ReplyMarkup = reply
-	b.bot.Send(msg)
+	_, err := b.bot.Send(msg)
+	return err
 }

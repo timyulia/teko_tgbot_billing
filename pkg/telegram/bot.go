@@ -37,11 +37,17 @@ func (b *Bot) handleUpdates(updates tgbotapi.UpdatesChannel) {
 		}
 
 		if update.Message.IsCommand() {
-			b.handleCommand(update.Message)
+			err := b.handleCommand(update.Message)
+			if err != nil {
+				b.handleError(update.Message, err)
+			}
 			continue
 		}
 
-		b.handleMessage(update.Message)
+		err := b.handleMessage(update.Message)
+		if err != nil {
+			b.handleError(update.Message, err)
+		}
 	}
 }
 
@@ -49,4 +55,10 @@ func (b *Bot) initUpdatesChannel() (tgbotapi.UpdatesChannel, error) {
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
 	return b.bot.GetUpdatesChan(u)
+}
+
+func (b *Bot) handleError(message *tgbotapi.Message, err error) {
+	log.Print(err)
+	msg := tgbotapi.NewMessage(message.Chat.ID, "something went wrong")
+	b.bot.Send(msg)
 }
