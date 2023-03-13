@@ -9,4 +9,4 @@
        &emsp;* получить информацию по общей сумме платежей за день
        
 ## Пример работы
-<img width="207" alt="image" src="https://user-images.githubusercontent.com/102811233/224660092-bf29244b-ce45-40e4-8698-1eddf0981d0b.png">
+<img width="300" alt="image" src="https://user-images.githubusercontent.com/102811233/224660092-bf29244b-ce45-40e4-8698-1eddf0981d0b.png">
